@@ -1,7 +1,7 @@
 #include <ArduinoSTL.h>
 
 #define lint long long int
-#define max_voltage 125
+#define max_voltage 120
 #define PI 3.14159265358979323846
 
 size_t to_mili (size_t a) { return 100 * a; }
@@ -10,11 +10,19 @@ double to_voltage(double voltage) { return voltage * max_voltage + max_voltage; 
 size_t pins[] = {3, 5, 6, 9, 10};
 
 std::vector<std::vector<std::pair<size_t, size_t>>> pins_starts = {
-  {{0, 50}, {2000, 30}, {5000, 40}},     // LED 1
-  {{1000, 20}, {4000, 25}, {7000, 30}},  // LED 2
-  {{1500, 35}, {4500, 25}},              // LED 3
-  {{2500, 30}, {6000, 20}, {8500, 25}},  // LED 4
-  {{500, 25}, {3000, 20}, {7500, 30}},   // LED 5
+  {{0, 60}, {160, 60}, {220, 0}},
+  {{50, 60}, {150, 60}, {220, 0}},
+  {{80, 60}, {150, 0}},
+  {{90, 60}, {200, 0}},
+  {{10, 60}, {140, 40}},
+};
+
+std::vector<std::vector<std::pair<size_t, size_t>>> pins_starts1 = {
+  {{0, 100}, {2000, 70}, {5000, 120}},     // LED 1
+  {{1000, 60}, {4000, 110}, {7000, 80}},  // LED 2
+  {{1500, 35}, {4500, 100}},              // LED 3
+  {{2500, 30}, {6000, 200}, {8500, 70}},  // LED 4
+  {{500, 40}, {3000, 130}, {7500, 90}},   // LED 5
 };
 
 std::vector<std::vector<std::pair<size_t, size_t>>> pins_starts2 = {
@@ -48,7 +56,7 @@ lint process(lint curr_time, const std::vector<std::pair<size_t, size_t>> pin_st
   double max_curr = -1;
 
   for (const auto [start, duration] : pin_starts) {
-    if (to_mili(start) <= curr_time && to_mili(start + duration) >= curr_time) {
+    if (to_mili(start) <= curr_time && to_mili(start + duration) >= curr_time && duration != 0) {
       double curr = -cos((1.0f * 2 * PI * (curr_time - to_mili(start))) / to_mili(duration));
       max_curr = std::max(curr, max_curr);
     }
